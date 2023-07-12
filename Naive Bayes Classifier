@@ -1,0 +1,37 @@
+import pandas as pd
+import numpy as np
+df=pd.read_csv("/content/drive/MyDrive/data.txt",sep='\t')
+df=df[df.columns[1:]]
+def naive_bayes(df,l):
+  p=len(df[df.iloc[:,-1]=='yes'])
+  n=len(df[df.iloc[:,-1]=='no'])
+  p1=p/len(df)
+  n1=n/len(df)
+  t=p1
+  f=n1
+  k=0
+  for i in l:
+    t*=len(df[(df.iloc[:,k]==i) & (df.iloc[:,-1]=='yes')])/p
+    f*=len(df[(df.iloc[:,k]==i) & (df.iloc[:,-1]=='no')])/n
+    k+=1
+  if(t>f):
+    return 'yes'
+  else:
+    return 'no'
+df_train=df.iloc[:9,:]
+df_test=df.iloc[9:,:-1]
+df_test=df_test.values.tolist()
+s=0
+y_pred=[]
+y_test=df.iloc[9:,-1]
+for i in df_test:
+  y_pred.append(naive_bayes(df_train,i))
+print(y_pred)
+print(y_test)
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    ConfusionMatrixDisplay,
+    f1_score,
+    classification_report,
+)
