@@ -1,0 +1,21 @@
+import pandas as pd
+df=pd.read_excel(r"/content/drive/MyDrive/finds.xlsx")
+df=df.dropna(axis=1)
+def finds(df):
+       h1=['pi' for i in range(len(df.columns)-1)]
+       df1=df.iloc[:,:-1]
+       for i in range(len(df)):
+           if df.iloc[i,-1]=='no':
+                 continue
+           else:
+              if h1[0]=='pi':
+                for j in range(len(df1.iloc[i])):
+                   h1[j]=df1.iloc[i,j]
+              else:
+                for j in range(len(df1.iloc[i])):
+                   if df1.iloc[i,j]==h1[j] :
+                      continue
+                   else:
+                       h1[j]='?'
+       print("the hypothesis is:\n", h1)
+finds(df)
