@@ -1,0 +1,17 @@
+import pandas as pd
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+import numpy as np
+df=pd.read_csv("/content/drive/MyDrive/Iris.csv")
+df=df.iloc[:,1:]
+x_train,x_test,y_train,y_test=train_test_split(df.iloc[:,:-1],df.iloc[:,-1],test_size=0.1)
+kn=KNeighborsClassifier(n_neighbors=1)
+kn.fit(x_train,y_train)
+x_test=np.array(x_test)
+x_test
+for i in range(len(x_test)):
+  x=x_test[i]
+  x_new=np.array([x])
+  prediction=kn.predict(x_new)
+  print("Target",y_test[i],"predicted",prediction)
+print(kn.score(x_test,y_test))
