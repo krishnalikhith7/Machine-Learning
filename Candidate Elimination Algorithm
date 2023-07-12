@@ -1,0 +1,59 @@
+import pandas as pd
+df=pd.read_excel("/content/drive/MyDrive/ml2.xlsx")
+def candidate(df):
+  s=[False for i in range(len(df.columns)-1)]
+  g=[]
+  for i in range(len(df)):
+    if df.iloc[i,-1].lower()=='no':
+      if len(g)==0:
+         l=[True for j in range(len(df.columns)-1)]
+         g=generalize(df,i,l)
+      else:
+        l=[]
+        for k in g:
+          if not consistent(df,k,i):
+            l.extend(generalize(df,i,k))
+          else:
+            l.append(k)
+        g=copy.deepcopy(l)
+        g=make_consistent(df,g,i)
+    else:
+      if set(s) == {False}:
+        s=list(df.iloc[i,:-1])
+      else:
+        for m in range(len(df.columns)-1):
+          if(df.iloc[i,m]!=s[m]):
+            s[m]=True
+      if(len(g)!=0):
+         g=make_consistent(df,g,i)
+  g=make_consistent(df,g,i)
+  print("general hypothesis",g)
+  print("specific hypothesis",s)
+  print(versionspace(g,s))
+candidate(df)
+import copy
+def generalize(df,r,l):
+  #b=[False for i in range(len(l))]
+  h=[]
+  for i in range(len(df.columns)-1):
+    if l[i] is True:
+       b=set(df.iloc[:,i])-{df.iloc[r,i]}
+       for k in b:
+            l1=copy.deepcopy(l)
+            l1[i]=k
+            h.append(l1)
+  return h
+import copy
+def make_consistent(df,g,i):
+  h=[]
+  for j in g:
+    flag=True
+    for k in range(i+1):
+     if not consistent(df,j,k):
+      flag=False
+      break
+    if(flag):
+       h.append(j)
+  return h
+
+
